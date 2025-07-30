@@ -1,8 +1,11 @@
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
+from app.models.knowledge_base import KnowledgeBase
 from app.models.tag import Tag
 from app.schemas.tag import TagCreate, TagUpdate
+
+from sqlalchemy.orm import selectinload   # 用于异步预加载关联字段
 
 # 创建标签
 async def create_tag(
@@ -36,7 +39,7 @@ async def get_tag(
     tag_id: int
 ) -> Optional[Tag]:
     result = await db.execute(
-        select(Tag).where(Tag.id == tag_id)
+        select(Tag).where(Tag.id == tag_id).options(selectinload(Tag.knowledge_bases).selectinload(KnowledgeBase.tags))
     )
     return result.scalar_one_or_none()
 
@@ -46,7 +49,7 @@ async def get_tag_by_name(
     name: str
 ) -> Optional[Tag]:
     result = await db.execute(
-        select(Tag).where(Tag.name == name)
+        select(Tag).where(Tag.name == name).options(selectinload(Tag.knowledge_bases).selectinload(KnowledgeBase.tags))
     )
     return result.scalar_one_or_none()
 
@@ -57,7 +60,7 @@ async def get_tags(
     limit: int = 100
 ) -> List[Tag]:
     result = await db.execute(
-        select(Tag).offset(skip).limit(limit)
+        select(Tag).offset(skip).limit(limit).options(selectinload(Tag.knowledge_bases).selectinload(KnowledgeBase.tags))
     )
     return result.scalars().all()
 
@@ -69,7 +72,7 @@ async def update_tag(
 ) -> Optional[Tag]:
     # 查询要更新的标签
     result = await db.execute(
-        select(Tag).where(Tag.id == tag_id)
+        select(Tag).where(Tag.id == tag_id).options(selectinload(Tag.knowledge_bases).selectinload(KnowledgeBase.tags))
     )
     db_tag = result.scalar_one_or_none()
     
@@ -90,7 +93,16 @@ async def update_tag(
     
     await db.commit()
     await db.refresh(db_tag)
-    return db_tag
+    # return db_tag
+    result = await db.execute(
+        select(Tag)
+        .where(Tag.id == tag_id)
+        .options(
+            selectinload(Tag.knowledge_bases)
+            .selectinload(KnowledgeBase.tags)
+        )
+    )
+    return result.scalar_one_or_none()
 
 # 删除标签
 async def delete_tag(

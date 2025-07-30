@@ -21,7 +21,7 @@ class TagRead(TagBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     # 字符串引用 + 类型注释
-    knowledge_bases: Optional[List['KnowledgeBaseRead']] = None  # type: Optional[List[KnowledgeBaseRead]]
+    #knowledge_bases: Optional[List['KnowledgeBaseRead']] = None  # type: Optional[List[KnowledgeBaseRead]]
     
     class Config:
         from_attributes = True

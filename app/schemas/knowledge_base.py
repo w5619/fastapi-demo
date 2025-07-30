@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import List, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING, Union
 
 # 仅在类型检查时导入（不执行），解决Pylance误报
 if TYPE_CHECKING:
@@ -13,7 +13,7 @@ class KnowledgeBaseBase(BaseModel):
 
 class KnowledgeBaseCreate(KnowledgeBaseBase):
     name: str
-    tag_ids: Optional[List[int| str]] = []
+    tag_ids: Optional[List[Union[int| str]]] = []
     tag_names: List[str] = []  # 接收标签名称，如["abc", "def"]
 
 class KnowledgeBaseUpdate(BaseModel):
@@ -30,7 +30,7 @@ class KnowledgeBaseRead(KnowledgeBaseBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     # 字符串引用 + 类型注释，同时满足Pydantic和Pylance
-    documents: Optional[List['DocumentRead']] = None  # type: Optional[List[DocumentRead]]
+    # documents: Optional[List['DocumentRead']] = None  # type: Optional[List[DocumentRead]]
     # tags: Optional[List['TagRead']] = None  # type: Optional[List[TagRead]]
 
     tags: List["TagRead"] = []  # 关联的标签

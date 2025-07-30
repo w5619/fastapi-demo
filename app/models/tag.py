@@ -21,5 +21,6 @@ class Tag(BaseModel):
     knowledge_bases = relationship(
         "KnowledgeBase",  # 关联的模型
         secondary=knowledge_base_tag,  # 使用的关联表
-        back_populates="tags"  # 反向关联的属性名
+        back_populates="tags",  # 反向关联的属性名
+        lazy="selectin"  # 关键：使用 selectin 支持异步预加载
     )

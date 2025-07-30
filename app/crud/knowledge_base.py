@@ -104,7 +104,7 @@ async def get_knowledge_base(
 ) -> Optional[KnowledgeBase]:
     # 查询指定ID的知识库
     result = await db.execute(
-        select(KnowledgeBase).where(KnowledgeBase.id == knowledge_base_id).options(selectinload(KnowledgeBase.tags))  # 预加载tags，避免后续异步查询
+        select(KnowledgeBase).where(KnowledgeBase.id == knowledge_base_id).options(selectinload(KnowledgeBase.tags).selectinload(Tag.knowledge_bases))  # 预加载tags，避免后续异步查询
     )
     # 返回查询结果，没有则返回None
     return result.scalar_one_or_none()
