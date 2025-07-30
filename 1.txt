@@ -1,0 +1,32 @@
+fastapi-demo/                          # 项目根目录
+├── app/                               # 应用主目录
+│   ├── __init__.py                    # 标识为Python包，可空
+│   ├── main.py                        # 主应用入口，创建FastAPI实例并包含路由注册
+│   ├── config.py                      # 配置管理，使用pydantic-settings读取环境变量和配置
+│   ├── database.py                    # 数据库连接配置，创建异步引擎和会话管理
+│   ├── models/                        # ORM模型目录，定义数据库表结构
+│   │   ├── __init__.py                # 标识为Python包，可导出模型类
+│   │   ├── base.py                    # 基础模型类，包含通用字段(如创建时间、更新时间)
+│   │   ├── knowledge_base.py          # 知识库模型，定义知识库表结构及关系
+│   │   ├── document.py                # 文档模型，定义文档表结构及关系
+│   │   └── tag.py                     # 标签模型，定义标签表结构及关系
+│   ├── schemas/                       # Pydantic模型目录，用于数据验证和API文档
+│   │   ├── __init__.py                # 标识为Python包，可导出模型类
+│   │   ├── knowledge_base.py          # 知识库的Pydantic模型，包含创建、更新、读取等模型
+│   │   ├── document.py                # 文档的Pydantic模型，包含创建、更新、读取等模型
+│   │   └── tag.py                     # 标签的Pydantic模型，包含创建、更新、读取等模型
+│   ├── crud/                          # 数据库操作目录，实现CRUD功能
+│   │   ├── __init__.py                # 标识为Python包，可导出CRUD函数
+│   │   ├── knowledge_base.py          # 知识库的CRUD操作函数
+│   │   ├── document.py                # 文档的CRUD操作函数
+│   │   └── tag.py                     # 标签的CRUD操作函数
+│   ├── api/                           # 路由目录，定义API端点
+│   │   ├── __init__.py                # 标识为Python包，可集中注册路由
+│   │   ├── knowledge_base.py          # 知识库相关的API路由
+│   │   ├── document.py                # 文档相关的API路由
+│   │   └── tag.py                     # 标签相关的API路由
+│   └── dependencies.py                # 依赖注入定义，如数据库会话依赖等
+├── migrations/                        # Alembic迁移脚本目录，存储数据库 schema 变更记录
+├── .env                               # 环境变量文件，存储数据库连接等配置信息
+├── alembic.ini                        # Alembic配置文件，配置迁移工具的行为
+└── requirements.txt                   # 项目依赖列表，包含所需的Python包及其版本
