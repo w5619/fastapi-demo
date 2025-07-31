@@ -5,6 +5,8 @@ from app.models.document import Document
 from app.models.knowledge_base import KnowledgeBase
 from app.schemas.document import DocumentCreate, DocumentUpdate
 
+from sqlalchemy.orm import selectinload   # 用于异步预加载关联字段
+
 # 创建文档
 async def create_document(
     db: AsyncSession, 
@@ -38,7 +40,7 @@ async def get_document(
     document_id: int
 ) -> Optional[Document]:
     result = await db.execute(
-        select(Document).where(Document.id == document_id)
+        select(Document).where(Document.id == document_id).options(selectinload(Document.knowledge_base))
     )
     return result.scalar_one_or_none()
 
@@ -53,7 +55,7 @@ async def get_documents(
     
     # 如果指定了知识库ID，添加筛选条件
     if knowledge_base_id:
-        query = query.where(Document.knowledge_base_id == knowledge_base_id)
+        query = query.where(Document.knowledge_base_id == knowledge_base_id).options(selectinload(Document.knowledge_base))
     
     result = await db.execute(
         query.offset(skip).limit(limit)
@@ -68,7 +70,7 @@ async def update_document(
 ) -> Optional[Document]:
     # 查询要更新的文档
     result = await db.execute(
-        select(Document).where(Document.id == document_id)
+        select(Document).where(Document.id == document_id).options(selectinload(Document.knowledge_base))
     )
     db_doc = result.scalar_one_or_none()
     
