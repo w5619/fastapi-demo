@@ -27,5 +27,6 @@ class Document(BaseModel):
     # 关系定义: 文档 -> 知识库   与知识库的反向关系
     knowledge_base = relationship(
         "KnowledgeBase",  # 关联的模型
-        back_populates="documents"  # 反向关联的属性名
+        back_populates="documents",  # 反向关联的属性名
+        lazy="selectin"  # 支持预加载
     )
