@@ -6,7 +6,7 @@ from app.config import settings
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="API 文档描述",
+    description="FastApi Demo",
     # 以下参数默认开启，若之前手动关闭了需移除
     # docs_url=None,  # 不要设置这个，否则会禁用 Swagger UI
     # redoc_url=None  # 不要设置这个，否则会禁用 ReDoc
